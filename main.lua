@@ -21,10 +21,10 @@ function mod:onPickup(pickup, var, subtype)
     end
 end
 
--- temp function to spawn a bed on game start
+-- test function to spawn a bed on game start
 function mod:onStart(continued)
     Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BED, 0, Vector(320,280), Vector(0,0), nil)
 end
 
-mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.onStart)
+-- mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.onStart)
 mod:AddCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, mod.onPickup)
