@@ -18,20 +18,26 @@ function isMomsBed(subtype)
 end
 
 -- checks if the pickup was a bed and the character is the lost
-function mod:onPickup(pickup)
+function mod:onPickup(pickup, t, subtype)
     if pickup.Type == EntityType.ENTITY_PICKUP and pickup.Variant == PickupVariant.PICKUP_BED and not isMomsBed(pickup.SubType) then
         local pType = Isaac.GetPlayer():GetPlayerType()
-        if pType == PlayerType.PLAYER_THELOST or pType == PlayerType.PLAYER_THELOST_B and not pickup.Touched then
+        if (pType == PlayerType.PLAYER_THELOST or pType == PlayerType.PLAYER_THELOST_B) and not pickup.Touched then
             giveHolyCard()
         end
     end
 end
 
--- test function to spawn a bed on game start
-function mod:onStart(continued)
-    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BED, 10, Vector(320,280), Vector(0,0), nil)
-    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BED, 0, Vector(30,280), Vector(0,0), nil)
+function spawnBed(subtype, xpos)
+    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_BED, subtype, Vector(xpos,280), Vector(0,0), nil)
 end
 
-mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.onStart)
+-- test function to spawns Mom's bed and Isaac's bed on game start
+function mod:onStart(continued)
+    if not continued then
+        spawnBed(10, 400) -- Mom's bed
+        spawnBed(0, 150) -- Isaac's bed
+    end
+end
+
+-- mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.onStart)
 mod:AddCallback(ModCallbacks.MC_PRE_PICKUP_COLLISION, mod.onPickup)
